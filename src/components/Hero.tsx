@@ -11,7 +11,11 @@ interface HeroProps {
 export const Hero: React.FC<HeroProps> = ({ onViewWorkClick, onContactClick }) => {
   // Use user-saved photo or embedded default
   const [photoUrl, setPhotoUrl] = useState<string>(() => {
-    return localStorage.getItem('puneeth_profile_photo') || DEFAULT_PROFILE_PHOTO;
+    // Clear old legacy cached photo if present
+    if (typeof window !== 'undefined' && localStorage.getItem('puneeth_profile_photo')) {
+      localStorage.removeItem('puneeth_profile_photo');
+    }
+    return localStorage.getItem('puneeth_profile_photo_custom') || DEFAULT_PROFILE_PHOTO;
   });
 
   const [isDragging, setIsDragging] = useState(false);
@@ -33,7 +37,7 @@ export const Hero: React.FC<HeroProps> = ({ onViewWorkClick, onContactClick }) =
     reader.onload = (event) => {
       const dataUrl = event.target?.result as string;
       if (dataUrl) {
-        localStorage.setItem('puneeth_profile_photo', dataUrl);
+        localStorage.setItem('puneeth_profile_photo_custom', dataUrl);
         setPhotoUrl(dataUrl);
         window.dispatchEvent(new CustomEvent('puneeth_photo_updated', { detail: dataUrl }));
       }

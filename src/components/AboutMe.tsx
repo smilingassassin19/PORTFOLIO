@@ -5,7 +5,10 @@ import { DEFAULT_PROFILE_PHOTO } from '../data/profilePhoto';
 
 export const AboutMe: React.FC = () => {
   const [photoUrl, setPhotoUrl] = useState<string>(() => {
-    return localStorage.getItem('puneeth_profile_photo') || DEFAULT_PROFILE_PHOTO;
+    if (typeof window !== 'undefined' && localStorage.getItem('puneeth_profile_photo')) {
+      localStorage.removeItem('puneeth_profile_photo');
+    }
+    return localStorage.getItem('puneeth_profile_photo_custom') || DEFAULT_PROFILE_PHOTO;
   });
 
   useEffect(() => {
